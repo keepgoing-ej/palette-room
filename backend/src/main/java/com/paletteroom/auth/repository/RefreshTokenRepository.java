@@ -1,6 +1,8 @@
-package com.paletteroom.auth.domain;
+package com.paletteroom.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.paletteroom.auth.domain.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
 
