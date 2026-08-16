@@ -1,4 +1,4 @@
-package com.paletteroom.common.exception;
+																																												package com.paletteroom.common.exception;
 
 import org.springframework.http.HttpStatus;
 import lombok.Getter;
