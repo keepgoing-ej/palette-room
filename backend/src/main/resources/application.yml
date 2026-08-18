@@ -25,3 +25,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+jwt:
+  secret: paletteroom-local-dev-secret-key-must-be-at-least-32-bytes-long
+  access-token-validity: 1800000
+  refresh-token-validity: 1209600000
