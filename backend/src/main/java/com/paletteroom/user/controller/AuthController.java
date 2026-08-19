@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.paletteroom.auth.service.AuthService;
 import com.paletteroom.user.dto.LoginRequest;
 import com.paletteroom.user.dto.LoginResponse;
+import com.paletteroom.user.dto.RefreshRequest;
 import com.paletteroom.user.dto.SignupRequest;
 import com.paletteroom.user.dto.SignupResponse;
 import com.paletteroom.user.service.UserService;
@@ -37,5 +38,16 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refresh(@RequestBody RefreshRequest request) {
+        LoginResponse response = authService.refresh(request);
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody RefreshRequest request) {
+        authService.logout(request);
+        return ResponseEntity.noContent().build();
+    }
   
 }
