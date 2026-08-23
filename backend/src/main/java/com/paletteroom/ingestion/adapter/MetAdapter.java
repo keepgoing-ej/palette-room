@@ -26,9 +26,9 @@ public class MetAdapter implements ArtworkSourcePort {
     @SuppressWarnings("unchecked")
     public List<SourceArtwork> fetchArtworks(int limit) {
         // 1단계: 이미지 있는 회화 작품 ID 목록
-        Map<String, Object> search = restClient.get()
-                .uri(BASE + "/search?hasImages=true&q=painting")
-                .retrieve()
+        Map<String, Object> search = restClient.get() //부서 필터 추가 후 다시 조정(범위 넓힘) q=* 수정
+        		.uri(BASE + "/search?hasImages=true&departmentId=11&q=portrait")
+        		.retrieve()
                 .body(Map.class);
 
         List<Integer> ids = (List<Integer>) search.get("objectIDs");
@@ -36,8 +36,11 @@ public class MetAdapter implements ArtworkSourcePort {
 
         // 2단계: ID별 상세 조회 → 공통 모델 변환
         List<SourceArtwork> result = new ArrayList<>();
+        int tried = 0;                                        // ← 추가 ①
         for (Integer id : ids) {
             if (result.size() >= limit) break;
+            tried++;                                          // ← 추가 ②
+
             try {
                 Map<String, Object> obj = restClient.get()
                         .uri(BASE + "/objects/" + id)
@@ -61,6 +64,9 @@ public class MetAdapter implements ArtworkSourcePort {
                 // 개별 작품 실패는 스킵 (실패 격리 — 면접 §4)
             }
         }
+        System.out.println("MET tried=" + tried + " → collected=" + result.size());  // ← 추가 ③
         return result;
+        
+        
     }
 }

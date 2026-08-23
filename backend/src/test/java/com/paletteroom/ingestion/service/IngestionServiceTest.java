@@ -12,6 +12,6 @@ class IngestionServiceTest {
 
     @Test
     void 소스당_5개씩_수집해본다() {
-        ingestionService.ingestAll(5);
+        ingestionService.ingestAll(5000);
     }
 }
