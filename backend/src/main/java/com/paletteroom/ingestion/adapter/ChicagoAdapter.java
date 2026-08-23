@@ -10,7 +10,7 @@ import org.springframework.web.client.RestClient;
 import com.paletteroom.ingestion.port.ArtworkSourcePort;
 import com.paletteroom.ingestion.port.SourceArtwork;
 
-@Component
+// @Component
 public class ChicagoAdapter implements ArtworkSourcePort {
 
     private static final String BASE = "https://api.artic.edu/api/v1";

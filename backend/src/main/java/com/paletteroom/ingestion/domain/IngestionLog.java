@@ -1,8 +1,6 @@
 package com.paletteroom.ingestion.domain;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -59,4 +57,20 @@ public class IngestionLog {
 	    this.status = "RUNNING";   // 고정
 	}
 
+	// 성공
+	public void success(int fetched, int saved, int skipped, int failed) {
+	    this.status = "SUCCESS";
+	    this.finishedAt = LocalDateTime.now();
+	    this.fetchedCount = fetched;
+	    this.savedCount = saved;
+	    this.skippedCount = skipped;
+	    this.failedCount = failed;
+	}
+
+	// 실패
+	public void fail(String errorMessage) {
+	    this.status = "FAILED";
+	    this.finishedAt = LocalDateTime.now();
+	    this.errorMessage = errorMessage;
+	}
 }
