@@ -21,8 +21,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            );
+                .requestMatchers("/api/auth/**").permitAll() //추가 검색 비로그인 승인
+				.requestMatchers("/api/artworks/**").permitAll()
+                .anyRequest().authenticated());
         return http.build();
     }
 }
