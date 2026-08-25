@@ -7,9 +7,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.paletteroom.auth.jwt.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
+
+
+@RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-
+	
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -20,10 +28,11 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() //추가 검색 비로그인 승인
 				.requestMatchers("/api/artworks/**").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().authenticated())
+        		.addFilterBefore(jwtAuthenticationFilter,
+        				org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

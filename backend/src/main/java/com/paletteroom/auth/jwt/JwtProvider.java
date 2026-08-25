@@ -39,4 +39,29 @@ public class JwtProvider {
                 .signWith(key)
                 .compact(); 
     }
+    
+    
+    // 토큰 검증: 서명이 맞고 만료 안 됐으면 true 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(key)          // 우리 비밀키로 서명 확인
+                    .build()
+                    .parseSignedClaims(token); // 파싱 — 위조·만료·형식오류면 예외
+            return true;
+        } catch (Exception e) {
+            return false;                      // 어떤 이유든 무효 토큰
+        }
+    }
+
+    // 토큰에서 userId 꺼내기 (subject에 넣었던 값)
+    public Long getUserId(String token) {
+        String subject = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+        return Long.valueOf(subject);
+    }
 }
