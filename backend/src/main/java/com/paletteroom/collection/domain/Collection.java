@@ -51,4 +51,10 @@ public class Collection {
 		this.name = name;
 		this.themeColor = themeColor;
 	}
+	
+	// 추가
+	public void update(String name, String themeColor) {
+	    this.name = name;
+	    this.themeColor = themeColor;
+	}
 }
