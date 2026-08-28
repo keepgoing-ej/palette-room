@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paletteroom.artwork.dto.ArtworkDetailResponse;
+import com.paletteroom.collection.dto.BulkAddRequest;
+import com.paletteroom.collection.dto.BulkAddResponse;
 import com.paletteroom.collection.dto.CollectionRequest;
 import com.paletteroom.collection.dto.CollectionResponse;
 import com.paletteroom.collection.service.CollectionService;
@@ -59,5 +62,33 @@ public class CollectionController {
             @PathVariable Long id) {
         collectionService.delete(userId, id);
         return ResponseEntity.noContent().build();
+    }
+    
+    // 벌크 담기 
+    // 벌크 담기: POST /api/collections/{id}/artworks — 200 + {added, skipped}
+    @PostMapping("/{id}/artworks")
+    public ResponseEntity<BulkAddResponse> addArtworks(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long id,
+            @RequestBody BulkAddRequest request) {
+        return ResponseEntity.ok(collectionService.addArtworks(userId, id, request));
+    }
+
+    // 빼기: DELETE /api/collections/{id}/artworks/{artworkId} — 204
+    @DeleteMapping("/{id}/artworks/{artworkId}")
+    public ResponseEntity<Void> removeArtwork(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long id,
+            @PathVariable Long artworkId) {
+        collectionService.removeArtwork(userId, id, artworkId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 컬렉션 안 작품 목록: GET /api/collections/{id}/artworks — 200
+    @GetMapping("/{id}/artworks")
+    public ResponseEntity<List<ArtworkDetailResponse>> getArtworks(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(collectionService.getArtworksInCollection(userId, id));
     }
 }

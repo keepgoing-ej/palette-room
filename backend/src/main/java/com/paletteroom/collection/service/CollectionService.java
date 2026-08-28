@@ -5,9 +5,16 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.paletteroom.artwork.domain.Artwork;
+import com.paletteroom.artwork.dto.ArtworkDetailResponse;
+import com.paletteroom.artwork.repository.ArtworkRepository;
 import com.paletteroom.collection.domain.Collection;
+import com.paletteroom.collection.domain.CollectionArtwork;
+import com.paletteroom.collection.dto.BulkAddRequest;
+import com.paletteroom.collection.dto.BulkAddResponse;
 import com.paletteroom.collection.dto.CollectionRequest;
 import com.paletteroom.collection.dto.CollectionResponse;
+import com.paletteroom.collection.repository.CollectionArtworkRepository;
 import com.paletteroom.collection.repository.CollectionRepository;
 import com.paletteroom.common.exception.BusinessException;
 import com.paletteroom.common.exception.ErrorCode;
@@ -24,7 +31,10 @@ public class CollectionService {
 
     private final CollectionRepository collectionRepository;
     private final UserRepository userRepository;
-
+    // 벌크담기 추가 
+    private final CollectionArtworkRepository collectionArtworkRepository;
+    private final ArtworkRepository artworkRepository;
+    
     // 생성: 20개 제한 검사 → 저장
     @Transactional
     public CollectionResponse create(Long userId, CollectionRequest request) {
@@ -77,4 +87,55 @@ public class CollectionService {
         }
         return collection;
     }
+    
+    // 벌크 담기
+ // 벌크 담기: 중복은 skip, 없는 작품 id도 skip — 실패시키지 않는다 (ADR-28)
+    @Transactional
+    public BulkAddResponse addArtworks(Long userId, Long collectionId, BulkAddRequest request) {
+        Collection collection = getOwnedCollection(userId, collectionId);   // 소유권 먼저
+
+        int added = 0, skipped = 0;
+        for (Long artworkId : request.artworkIds()) {
+            // 이미 담겨 있으면 skip (1차 방어 — 최종 방어는 DB UNIQUE)
+            if (collectionArtworkRepository.existsByCollectionIdAndArtworkId(collectionId, artworkId)) {
+                skipped++;
+                continue;
+            }
+            // 존재하지 않는 작품 id면 skip
+            Artwork artwork = artworkRepository.findById(artworkId).orElse(null);
+            if (artwork == null) {
+                skipped++;
+                continue;
+            }
+            collectionArtworkRepository.save(CollectionArtwork.builder()
+                    .collection(collection)
+                    .artwork(artwork)
+                    .build());
+            added++;
+        }
+        return new BulkAddResponse(added, skipped);
+    }
+
+    // 빼기: 컬렉션 소유권 → 그 안에 그 작품이 있는지 → 삭제
+    @Transactional
+    public void removeArtwork(Long userId, Long collectionId, Long artworkId) {
+        getOwnedCollection(userId, collectionId);
+        CollectionArtwork ca = collectionArtworkRepository
+                .findByCollectionIdAndArtworkId(collectionId, artworkId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ARTWORK_NOT_IN_COLLECTION));
+        collectionArtworkRepository.delete(ca);
+    }
+
+    // 컬렉션 안 작품 목록
+    @Transactional(readOnly = true)
+    public List<ArtworkDetailResponse> getArtworksInCollection(Long userId, Long collectionId) {
+        getOwnedCollection(userId, collectionId);
+        return collectionArtworkRepository.findAllByCollectionId(collectionId)
+                .stream()
+                .map(ca -> ArtworkDetailResponse.from(ca.getArtwork()))
+                .toList();
+    }
+    
+    
+  
 }
