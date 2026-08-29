@@ -56,4 +56,10 @@ public class Note {
 			this.content = content;
 			this.moodColor = moodColor;
 	}
+	
+	// 8/29 추가 
+	public void update(String content, String moodColor) {
+	    this.content = content;
+	    this.moodColor = moodColor;
+	}
 }
