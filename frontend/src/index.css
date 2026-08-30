@@ -1,111 +1,55 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+/* ── Palette Room 디자인 토큰 ──
+   UI는 전면 무채색. 색은 오직 작품에서만 온다.
+   --accent-user 는 사용자가 색을 고르면 JS가 런타임에 덮어쓴다. */
+:root{
+  /* 색 */
+  --gallery-bg : #F7F7F5;
+  --surface    : #FFFFFF;
+  --ink        : #16161A;
+  --ink-muted  : #6B6B70;
+  --line       : #E4E4E0;
+  --accent     : #233D4D;
+  --accent-user: #233D4D;
+  --danger     : #A4423A;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* 타이포 */
+  --font-display: 'Instrument Serif', 'Pretendard', serif;
+  --font-body   : 'Pretendard', system-ui, sans-serif;
+  --font-mono   : 'IBM Plex Mono', monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* 타입 스케일 */
+  --t-display: 40px;
+  --t-title  : 24px;
+  --t-body   : 16px;
+  --t-caption: 14px;
+  --t-micro  : 12px;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* 간격 — 8px 배수 */
+  --s1: 4px;  --s2: 8px;  --s3: 16px;
+  --s4: 24px; --s5: 32px; --s6: 48px; --s7: 64px;
+
+  --radius: 2px;
+  --maxw  : 1440px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ── 리셋 ── */
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-text-size-adjust:100%; }
+body{
+  font-family:var(--font-body);
+  font-size:var(--t-body);
+  line-height:1.6;
+  color:var(--ink);
+  background:var(--gallery-bg);
+  -webkit-font-smoothing:antialiased;
+}
+img{ display:block; max-width:100%; }
+button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+:focus-visible{ outline:2px solid var(--accent-user); outline-offset:2px; }
 
-body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
 }
