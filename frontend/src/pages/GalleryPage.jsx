@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
 import { clearTokens } from '../lib/auth'
+import NavBar from "../components/NavBar.jsx";
 
 function GalleryPage() {
     const navigate = useNavigate()
@@ -46,12 +47,11 @@ function GalleryPage() {
     }
 
     return (
-        <div style={{ padding: 'var(--s6)', maxWidth: 'var(--maxw)', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--s5)' }}>
-                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--t-display)' }}>Gallery</h1>
-                <button style={{ color: 'var(--ink-muted)' }} onClick={handleLogout}>로그아웃</button>
-            </div>
-
+        <>
+            <NavBar />
+            <div style={{ padding: 'var(--s6)', maxWidth: 'var(--maxw)', margin: '0 auto' }}>
+                <h1 style={{ fontFamily: 'var(--font-display)',
+                            fontSize: 'var(--t-display)', marginBottom: 'var(--s5)' }}>색으로 찾기</h1>
             {loading && <p style={{ color: 'var(--ink-muted)' }}>불러오는 중…</p>}
             {error && <p style={{ color: 'var(--danger)' }}>{error}</p>}
 
@@ -59,7 +59,7 @@ function GalleryPage() {
                 <>
                     <div style={grid}>
                         {artworks.map((art) => (
-                            <div key={art.id} style={card}>
+                            <div key={art.id} style={card} onClick={() => navigate(`/artwork/${art.id}`)}>
                                 {art.imageUrl
                                     ? <img src={art.imageUrl} alt={art.title} style={img} />
                                     : <div style={{ ...img, background: 'var(--line)' }} />}
@@ -112,6 +112,7 @@ function GalleryPage() {
                 </>
             )}
         </div>
+        </>
     )
 }
 
@@ -120,7 +121,7 @@ const grid = {
     gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
     gap: 'var(--s4)',
 }
-const card = { display: 'flex', flexDirection: 'column', gap: 'var(--s1)' }
+const card = { display: 'flex', flexDirection: 'column', gap: 'var(--s1)', cursor: 'pointer' }
 const img = { width: '100%', aspectRatio: '3 / 4', objectFit: 'cover', borderRadius: 'var(--radius)' }
 const cardTitle = { fontSize: 'var(--t-body)', marginTop: 'var(--s2)' }
 const cardMeta = { fontSize: 'var(--t-caption)', color: 'var(--ink-muted)' }

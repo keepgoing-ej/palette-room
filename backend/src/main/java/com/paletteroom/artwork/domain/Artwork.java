@@ -46,6 +46,9 @@ public class Artwork {
 	@Column(length = 100)
 	private String department;
 	
+	@Column(length = 20)
+	private String category;
+	
 	@Column(nullable = false, length = 1000)
 	private String imageUrl;
 	

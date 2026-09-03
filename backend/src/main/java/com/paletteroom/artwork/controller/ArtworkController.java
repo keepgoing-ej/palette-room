@@ -23,12 +23,13 @@ public class ArtworkController {
 
 	private final ArtworkService artworkService;
 	
-	@GetMapping("/search")
+	@GetMapping("/search") // category 추가 
 	public ResponseEntity<List<ColorSearchResponse>> search(
 	        @RequestParam String hex,
 	        @RequestParam(defaultValue = "20") double tolerance,
-	        @RequestParam(defaultValue = "20") int limit) {
-	    return ResponseEntity.ok(artworkService.searchByColor(hex, tolerance, limit));
+	        @RequestParam(defaultValue = "20") int limit,
+	        @RequestParam(required = false) String category) {
+	    return ResponseEntity.ok(artworkService.searchByColor(hex, tolerance, limit, category));
 	   }
 	
 	// 상세: /api/artworks/5217 처럼 경로에 id가 들어오는 형태

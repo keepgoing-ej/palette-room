@@ -23,4 +23,9 @@ application-prod.yml
 
 # OS
 Thumbs.db
-.DS_Store
+.DS_Storepalette_backup_*.sql 
+recolor.py 
+frontend/src/pages/img.png 
+palette_backup_*.sql 
+recolor.py 
+frontend/src/pages/img.png 
