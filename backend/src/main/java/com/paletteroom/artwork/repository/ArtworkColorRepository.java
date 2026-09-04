@@ -19,11 +19,14 @@ public interface ArtworkColorRepository extends JpaRepository<ArtworkColor, Long
 	               MIN(a.image_url) AS imageUrl
 	        FROM artwork_colors ac
 	        JOIN artworks a ON a.id = ac.artwork_id
-	        WHERE ac.lab_l BETWEEN :l - :tol AND :l + :tol
+	        WHERE ac.color_rank <= 2
+	          AND ac.lab_l BETWEEN :l - :tol AND :l + :tol
 	          AND ac.lab_a BETWEEN :a - :tol AND :a + :tol
 	          AND ac.lab_b BETWEEN :b - :tol AND :b + :tol
 	          AND ac.color_ratio >= 0.15
+	          AND ABS(SQRT(ac.lab_a * ac.lab_a + ac.lab_b * ac.lab_b) - SQRT(:a * :a + :b * :b)) <= 15
 	          AND (:category IS NULL OR a.category = :category)
+	          AND (:keyword IS NULL OR a.title LIKE CONCAT('%', :keyword, '%'))   -- [변경] 제목 키워드 병행(있을 때만)
 	        GROUP BY ac.artwork_id
 	        HAVING dist <= :tol * :tol
 	        ORDER BY dist
@@ -34,5 +37,6 @@ public interface ArtworkColorRepository extends JpaRepository<ArtworkColor, Long
 	                                 @Param("b") double b,
 	                                 @Param("tol") double tol,
 	                                 @Param("limit") int limit,
-	                                 @Param("category") String category);
+	                                 @Param("category") String category,
+	                                 @Param("keyword") String keyword);   // [변경] 키워드 파라미터
 }

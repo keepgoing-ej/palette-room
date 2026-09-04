@@ -23,13 +23,14 @@ public class ArtworkController {
 
 	private final ArtworkService artworkService;
 	
-	@GetMapping("/search") // category 추가 
+	@GetMapping("/search")
 	public ResponseEntity<List<ColorSearchResponse>> search(
 	        @RequestParam String hex,
 	        @RequestParam(defaultValue = "20") double tolerance,
 	        @RequestParam(defaultValue = "20") int limit,
-	        @RequestParam(required = false) String category) {
-	    return ResponseEntity.ok(artworkService.searchByColor(hex, tolerance, limit, category));
+	        @RequestParam(required = false) String category,
+	        @RequestParam(required = false) String keyword) {   // [변경] keyword 추가
+	    return ResponseEntity.ok(artworkService.searchByColor(hex, tolerance, limit, category, keyword));  // [변경]
 	   }
 	
 	// 상세: /api/artworks/5217 처럼 경로에 id가 들어오는 형태
@@ -42,5 +43,13 @@ public class ArtworkController {
 	@GetMapping
 	public ResponseEntity<Page<ArtworkDetailResponse>> getArtworks(Pageable pageable) {
 	    return ResponseEntity.ok(artworkService.getArtworks(pageable));
+	}
+	
+	// [변경] 제목 텍스트 검색: /api/artworks/search-text?keyword=woman&page=0&size=20
+	@GetMapping("/search-text")
+	public ResponseEntity<Page<ArtworkDetailResponse>> searchByTitle(
+	        @RequestParam String keyword,
+	        Pageable pageable) {
+	    return ResponseEntity.ok(artworkService.searchByTitle(keyword, pageable));
 	}
 }
